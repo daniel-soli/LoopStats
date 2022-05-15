@@ -16,6 +16,9 @@ jobs:
   deploy-to-prod:
     name: Publish App to Prod
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.PROJECT_DIRECTORY }}
     environment: prod
     env:
       RESOURCE_GROUP_NAME: LoopyStatsRG
