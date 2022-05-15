@@ -30,7 +30,6 @@ jobs:
           workflow: ${{ env.WORKFLOW_NAME }}
           workflow_conclusion: success
           name: ${{ env.ARTIFACT_NAME }}.zip
-          path: ${{ env.PROJECT_DIRECTORY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy Azure Function
