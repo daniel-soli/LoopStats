@@ -50,7 +50,7 @@ jobs:
           zip -r ../${{ env.ARTIFACT_NAME }}.zip .
       - if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/master' }}
         name: Publish Build Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ env.PROJECT_DIRECTORY }}/${{ env.ARTIFACT_NAME }}.zip
