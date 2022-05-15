@@ -29,7 +29,7 @@ jobs:
       run:
         working-directory: ${{ env.PROJECT_DIRECTORY }}
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@master
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -42,17 +42,13 @@ jobs:
       - name: Build .NET project
         run: dotnet build --no-restore --configuration ${{ env.CONFIGURATION }}
 
-      - name: Test .NET project
-        run: dotnet test
-        working-directory: ${{ env.TEST_DIRECTORY }}
-
-      - if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main' }}
+      - if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/master' }}
         name: Publish .NET project
         run: |
           dotnet publish --no-build --configuration ${{ env.CONFIGURATION }} --output ./publish
           cd publish
           zip -r ../${{ env.ARTIFACT_NAME }}.zip .
-      - if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main' }}
+      - if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/master' }}
         name: Publish Build Artifact
         uses: actions/upload-artifact@v2
         with:
