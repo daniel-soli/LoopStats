@@ -10,7 +10,7 @@ on:
       - 'feature/**'
   push:
     paths:
-      - 'src/Yx.Integration/Presentation/FunctionApp/**'
+      - 'src/LoopStats/**'
     branches:
       - 'master'
 
