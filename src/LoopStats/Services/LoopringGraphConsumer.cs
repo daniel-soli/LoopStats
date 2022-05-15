@@ -1,6 +1,6 @@
 ﻿using GraphQL;
 using GraphQL.Client.Abstractions;
-using LoopStats.DTOs;
+using LoopStats.Models.DTOs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿using LoopStats.DTOs;
+﻿using LoopStats.Models.DTOs;
 using System.Threading.Tasks;
 
 namespace LoopStats.Services
