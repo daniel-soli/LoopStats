@@ -16,9 +16,6 @@ jobs:
   deploy-to-prod:
     name: Publish App to Prod
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ env.PROJECT_DIRECTORY }}
     environment: prod
     env:
       RESOURCE_GROUP_NAME: LoopyStatsRG
@@ -33,7 +30,7 @@ jobs:
         with:
           workflow: ${{ env.WORKFLOW_NAME }}
           workflow_conclusion: success
-          name: ${{ env.ARTIFACT_NAME }}.zip
+          name: ${{ env.ARTIFACT_NAME }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy Azure Function
