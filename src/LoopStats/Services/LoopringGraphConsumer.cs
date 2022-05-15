@@ -39,6 +39,7 @@ public class LoopringGraphConsumer : ILoopringGraphConsumer
             Variables = null,
             OperationName = "GetBlockStats"
         };
+        var test = "";
         var response = await _client.SendQueryAsync<Rootobject>(query);
         return response.Data.proxy;
     }
