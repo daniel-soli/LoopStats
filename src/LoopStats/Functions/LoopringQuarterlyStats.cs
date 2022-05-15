@@ -23,7 +23,7 @@ namespace LoopStats
         }
 
         [FunctionName("LoopringQuarterlyStats")]
-        public async Task Run([TimerTrigger("0 */10 * * * *")]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
@@ -34,7 +34,11 @@ namespace LoopStats
             stats.PartitionKey = "LoopyStats";
             stats.RowKey = DateTime.UtcNow.ToString();
 
+            log.LogInformation("Finished mapping, now sending to storage table");
+
             await _statsRepository.Create(stats);
+
+            log.LogInformation("Finished function.");
         }
     }
 }
