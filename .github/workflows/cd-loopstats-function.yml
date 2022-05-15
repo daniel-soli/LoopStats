@@ -22,7 +22,7 @@ jobs:
       FUNCTION_APP_NAME: LoopyStats
       BASE_URL: 'https://loopystats.azurewebsites.net'
     steps:
-
+      - uses: actions/checkout@v2
       # Using a marketplace task until sharing of artifacts between workflows is implemented
       - name: Download Build Artifact
         uses: dawidd6/action-download-artifact@v2
