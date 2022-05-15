@@ -10,7 +10,7 @@ on:
 
 env:
   ARTIFACT_NAME: Loopstats.LoopStats-CI
-  WORKFLOW_NAME: ci-loopstats-function.yml
+  WORKFLOW_NAME: Loopstats.LoopStats-CI
 
 jobs:
   deploy-to-prod:
