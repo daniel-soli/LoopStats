@@ -54,5 +54,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ env.PROJECT_DIRECTORY }}/${{ env.ARTIFACT_NAME }}.zip
+          path: ${{ env.ARTIFACT_NAME }}.zip
           if-no-files-found: error
