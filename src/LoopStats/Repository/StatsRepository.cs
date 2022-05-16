@@ -12,12 +12,10 @@ namespace LoopStats.Repository;
 public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEntity
 {
     private readonly CloudTable _table;
-    private readonly ILogger _log;
 
-    public StatsRepository(CloudTable table, ILogger log)
+    public StatsRepository(CloudTable table)
     {
         _table = table;
-        _log = log;
     }
 
     public async Task<T> Create(T entity, CancellationToken cancellationToken = default)
@@ -27,14 +25,11 @@ public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEnt
             var mergeOperation = TableOperation.InsertOrMerge(entity);
             var result = (await _table.ExecuteAsync(mergeOperation, cancellationToken)).Result as T;
 
-            _log.LogInformation("Saved to storage");
-
             return result;
         }
         catch (Exception ex)
         {
-            _log.LogError($"Error when saving to storage. {ex.Message}");
-            return null;
+            throw new Exception(ex.Message, ex);
         }
     }
 }
