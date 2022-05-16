@@ -33,7 +33,7 @@ namespace LoopStats
             var stats = _mapper.Map<LoopringStatsEntity>(result);
 
             stats.PartitionKey = "LoopyStats";
-            stats.RowKey = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
+            stats.RowKey = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
 
             log.LogInformation("Finished mapping, now sending to storage table");
 
