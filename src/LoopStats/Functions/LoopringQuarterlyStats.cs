@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using AutoMapper;
 using LoopStats.Models.Entities;
@@ -32,7 +33,7 @@ namespace LoopStats
             var stats = _mapper.Map<LoopringStatsEntity>(result);
 
             stats.PartitionKey = "LoopyStats";
-            stats.RowKey = DateTime.UtcNow.ToString();
+            stats.RowKey = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
 
             log.LogInformation("Finished mapping, now sending to storage table");
 
