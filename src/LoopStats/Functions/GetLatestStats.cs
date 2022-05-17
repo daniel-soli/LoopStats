@@ -25,8 +25,8 @@ namespace LoopStats.Functions
             _statsRepository = statsRepository;
         }
 
-        [FunctionName("GetLatest")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "Get Latest" })]
+        [FunctionName(nameof(GetLatest))]
+        [OpenApiOperation(operationId: "Latest", tags: new[] { "Get Latest" })]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
         public async Task<IActionResult> GetLatest(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
@@ -38,8 +38,8 @@ namespace LoopStats.Functions
             return new OkObjectResult(result);
         }
 
-        [FunctionName("GetLastDaysCount")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "Get Latest" })]
+        [FunctionName(nameof(GetLastDaysCount))]
+        [OpenApiOperation(operationId: "Count", tags: new[] { "Get Last Day Count" })]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
         public async Task<IActionResult> GetLastDaysCount(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
@@ -51,8 +51,8 @@ namespace LoopStats.Functions
             return new OkObjectResult(result);
         }
 
-        [FunctionName("GetAllQuarterlyStats")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "Get Latest" })]
+        [FunctionName(nameof(GetAllStats))]
+        [OpenApiOperation(operationId: "All", tags: new[] { "Get All Stats" })]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
         public async Task<IActionResult> GetAllStats(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
@@ -64,8 +64,8 @@ namespace LoopStats.Functions
             return new OkObjectResult(result);
         }
 
-        [FunctionName("GetAllDailyStats")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "Get Daily" })]
+        [FunctionName(nameof(GetAllDailyStats))]
+        [OpenApiOperation(operationId: "Daily", tags: new[] { "Get Daily" })]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
         public async Task<IActionResult> GetAllDailyStats(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
