@@ -42,4 +42,22 @@ public class LoopringGraphConsumer : ILoopringGraphConsumer
         var response = await _client.SendQueryAsync<Rootobject>(query);
         return response.Data.proxy;
     }
+
+    public async Task<SingleBlockStatsDto> GetHistoricalBlockStats(int blockId)
+    {
+        var query = new GraphQLRequest
+        {
+            Query = $"query BlockQuery{{ block(id: {blockId}) {{ timestamp id transactionCount transferCount transferNFTCount tradeNFTCount nftMintCount }} }}",
+            Variables = null,
+            OperationName = "GetBlockStat"
+        };
+
+        var response = await _client.SendQueryAsync<SingleRootobjecct>(query);
+
+        DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(long.Parse(response.Data.block.timestamp));
+
+        response.Data.block.timestamp = dateTimeOffset.ToString();
+
+        return response.Data.block;
+    }
 }

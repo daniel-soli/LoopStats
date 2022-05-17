@@ -6,5 +6,6 @@ namespace LoopStats.Services
     public interface ILoopringGraphConsumer
     {
         Task<BlockStatsDto> GetBlockStats();
+        Task<SingleBlockStatsDto> GetHistoricalBlockStats(int blockId);
     }
 }

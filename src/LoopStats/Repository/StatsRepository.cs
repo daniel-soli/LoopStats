@@ -38,6 +38,28 @@ public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEnt
         }
     }
 
+    public async Task<LoopringStatsEntity> GetByBlockId(long blockId, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "LoopyStatsQuarterly");
+            var filter2 = TableQuery.GenerateFilterConditionForLong("blockCount", QueryComparisons.Equal, blockId);
+
+            var combined = TableQuery.CombineFilters(filter, TableOperators.And, filter2);
+            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>().Where(combined);
+            TableContinuationToken token = null;
+            var response = await _table.ExecuteQuerySegmentedAsync(query, token);
+
+            var result = response.LastOrDefault();
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
     public async Task<LoopringStatsEntity> GetLatestStatAsync(CancellationToken cancellationToken = default)
     {
         try
@@ -131,7 +153,7 @@ public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEnt
         }
     }
 
-    public async Task<AllStatsDto> GetAllDailyStatsAsync()
+    public async Task<AllStatsDto> GetAllDailyStatsAsync(CancellationToken cancellationToken = default)
     {
         try
         {

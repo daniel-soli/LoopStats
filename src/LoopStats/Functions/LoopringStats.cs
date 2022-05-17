@@ -32,6 +32,12 @@ namespace LoopStats
 
             var stats = _mapper.Map<LoopringStatsEntity>(result);
 
+            // Check to see if the block data already exist
+            var existingBlock = _statsRepository.GetByBlockId(stats.blockCount);
+
+            if (existingBlock != null)
+                await Task.CompletedTask;
+
             stats.PartitionKey = "LoopyStatsQuarterly";
             string invertedTicks = string.Format("{0:D19}", DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks);
             stats.RowKey = invertedTicks;

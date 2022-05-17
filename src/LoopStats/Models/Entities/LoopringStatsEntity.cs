@@ -5,7 +5,7 @@ using Microsoft.Azure.Cosmos.Table;
 
 namespace LoopStats.Models.Entities;
 
-public class LoopringStatsEntity : TableEntity, IMapFrom<BlockStatsDto>
+public class LoopringStatsEntity : TableEntity, IMapFrom<BlockStatsDto>, IMapFrom<SingleBlockStatsDto>
 {
     public long blockCount { get; set; }
     public long transactionCount { get; set; }
@@ -19,5 +19,8 @@ public class LoopringStatsEntity : TableEntity, IMapFrom<BlockStatsDto>
     public void Mapping(Profile profile)
     {
         profile.CreateMap<BlockStatsDto, LoopringStatsEntity>();
+        profile.CreateMap<SingleBlockStatsDto, LoopringStatsEntity>()
+            .ForMember(d => d.blockCount, opt => opt.MapFrom(x => x.id))
+            .ForMember(d => d.Timestamp, opt => opt.MapFrom(x => x.timestamp));
     }
 }
