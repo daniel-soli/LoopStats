@@ -33,11 +33,12 @@ namespace LoopStats
             var stats = _mapper.Map<LoopringStatsEntity>(result);
 
             stats.PartitionKey = "LoopyStats";
-            stats.RowKey = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            string invertedTicks = string.Format("{0:D19}", DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks);
+            stats.RowKey = invertedTicks;
 
             log.LogInformation("Finished mapping, now sending to storage table");
 
-            await _statsRepository.Create(stats);
+            await _statsRepository.CreateAsync(stats);
 
             log.LogInformation("Finished function.");
         }
