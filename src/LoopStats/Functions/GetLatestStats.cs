@@ -51,7 +51,7 @@ namespace LoopStats.Functions
             return new OkObjectResult(result);
         }
 
-        [FunctionName("GetAllStats")]
+        [FunctionName("GetAllQuarterlyStats")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "Get Latest" })]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
         public async Task<IActionResult> GetAllStats(
@@ -64,7 +64,7 @@ namespace LoopStats.Functions
             return new OkObjectResult(result);
         }
 
-        [FunctionName("GetAllStats")]
+        [FunctionName("GetAllDailyStats")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "Get Daily" })]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
         public async Task<IActionResult> GetAllDailyStats(
