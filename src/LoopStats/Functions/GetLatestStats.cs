@@ -72,7 +72,7 @@ namespace LoopStats.Functions
         {
             _logger.LogInformation("C# HTTP trigger GetAllStats processed a request.");
 
-            var result = await _statsRepository.GetAllAsync();
+            var result = await _statsRepository.GetAllDailyStatsAsync();
 
             return new OkObjectResult(result);
         }
