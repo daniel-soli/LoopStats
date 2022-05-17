@@ -39,6 +39,7 @@ namespace LoopStats
                 await Task.CompletedTask;
 
             stats.PartitionKey = "LoopyStatsQuarterly";
+            stats.blockTimeStamp = DateTime.UtcNow;
             string invertedTicks = string.Format("{0:D19}", DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks);
             stats.RowKey = invertedTicks;
 
@@ -59,6 +60,7 @@ namespace LoopStats
             var stats = _mapper.Map<LoopringStatsEntity>(result);
 
             stats.PartitionKey = "LoopyStatsDaily";
+            stats.blockTimeStamp = DateTime.UtcNow;
             string invertedTicks = string.Format("{0:D19}", DateTime.MaxValue.Ticks - DateTime.UtcNow.Ticks);
             stats.RowKey = invertedTicks;
 

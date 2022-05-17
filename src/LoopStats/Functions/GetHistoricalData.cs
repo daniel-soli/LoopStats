@@ -53,7 +53,7 @@ namespace LoopStats.Functions
             stats.tradeNFTCount = lastBlock.tradeNFTCount - stats.tradeNFTCount;
             stats.nftCount = lastBlock.nftCount - stats.nftMintCount;
             stats.nftMintCount = lastBlock.nftMintCount - stats.nftMintCount;
-
+            stats.blockTimeStamp = stats.Timestamp.DateTime;
             stats.PartitionKey = "LoopyStatsQuarterly";
             string invertedTicks = string.Format("{0:D19}", DateTime.MaxValue.Ticks - stats.Timestamp.Ticks);
             stats.RowKey = invertedTicks;
@@ -93,7 +93,7 @@ namespace LoopStats.Functions
                 stats.tradeNFTCount = lastBlock.tradeNFTCount - stats.tradeNFTCount;
                 stats.nftCount = lastBlock.nftCount - stats.nftMintCount;
                 stats.nftMintCount = lastBlock.nftMintCount - stats.nftMintCount;
-                
+                stats.blockTimeStamp = stats.Timestamp.DateTime;
 
                 stats.PartitionKey = "LoopyStatsQuarterly";
                 string invertedTicks = string.Format("{0:D19}", DateTime.MaxValue.Ticks - stats.Timestamp.Ticks);
