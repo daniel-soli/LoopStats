@@ -1,5 +1,5 @@
 # LoopStats
-Loopstats is a way for getting statistics on the [Loopring Protocol](https://www.loopring.io). I use [Juan Mardefagos graph](https://api.thegraph.com/subgraphs/name/juanmardefago/loopring36/graphql) to fetch statistics every 15 minutes and also every day at 00:30. This can be used as you want, but since this is a personal account, please use it accordingly. 
+Loopstats is a way for getting statistics on the [Loopring Protocol](https://www.loopring.io). I use [Juan Mardefagos graph](https://api.thegraph.com/subgraphs/name/juanmardefago/loopring36/graphql) to fetch statistics every 15 minutes and also every day at 00:30. This can be used as you want, but since this is a personal account, please don't go nuts calling the API. 
 
 ## What data can you get
 * blockCount
