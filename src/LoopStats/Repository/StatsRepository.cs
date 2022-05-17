@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Cosmos.Table;
+﻿using LoopStats.Models.Entities;
+using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,30 @@ public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEnt
         _table = table;
     }
 
-    public async Task<T> Create(T entity, CancellationToken cancellationToken = default)
+    public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
     {
         try
         {
             var mergeOperation = TableOperation.InsertOrMerge(entity);
             var result = (await _table.ExecuteAsync(mergeOperation, cancellationToken)).Result as T;
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<LoopringStatsEntity> GetLatestStatAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>().Take(50);
+            TableContinuationToken token = null;
+            var response = await _table.ExecuteQuerySegmentedAsync(query, token);
+
+            var result = response.FirstOrDefault();
 
             return result;
         }
