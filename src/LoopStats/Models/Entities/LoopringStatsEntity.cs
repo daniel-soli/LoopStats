@@ -2,6 +2,7 @@
 using LoopStats.Common.Mappings;
 using LoopStats.Models.DTOs;
 using Microsoft.Azure.Cosmos.Table;
+using System;
 
 namespace LoopStats.Models.Entities;
 
@@ -15,6 +16,7 @@ public class LoopringStatsEntity : TableEntity, IMapFrom<BlockStatsDto>, IMapFro
     public long nftMintCount { get; set; }
     public long userCount { get; set; }
     public long nftCount { get; set; }
+    public DateTime blockTimeStamp { get; set; }
 
     public void Mapping(Profile profile)
     {
