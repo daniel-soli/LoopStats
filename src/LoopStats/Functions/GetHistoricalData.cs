@@ -43,13 +43,13 @@ namespace LoopStats.Functions
 
             var stats = _mapper.Map<LoopringStatsEntity>(result);
 
-            var test = await _statsRepository.GetByBlockId(id+1);
+            var lastBlock = await _statsRepository.GetByBlockId(id+1);
 
-            stats.transactionCount = test.transactionCount - stats.transactionCount;
-            stats.transferCount = test.transferCount - stats.transferCount;
-            stats.transferNFTCount = test.transferNFTCount - stats.transferNFTCount;
-            stats.tradeNFTCount = test.tradeNFTCount - stats.tradeNFTCount;
-            stats.nftMintCount = test.nftMintCount - stats.nftMintCount;
+            stats.transactionCount = lastBlock.transactionCount - stats.transactionCount;
+            stats.transferCount = lastBlock.transferCount - stats.transferCount;
+            stats.transferNFTCount = lastBlock.transferNFTCount - stats.transferNFTCount;
+            stats.tradeNFTCount = lastBlock.tradeNFTCount - stats.tradeNFTCount;
+            stats.nftMintCount = lastBlock.nftMintCount - stats.nftMintCount;
 
             stats.PartitionKey = "LoopyStatsQuarterly";
             string invertedTicks = string.Format("{0:D19}", DateTime.MaxValue.Ticks - stats.Timestamp.Ticks);
