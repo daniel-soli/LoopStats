@@ -26,3 +26,5 @@ Gets you all the rows of stats (up until 1000). This is from the partition every
 
 ## Data
 Since this is a new repository the data is not that big yet. I will try to add historic data later, but as for now it is only from 16th May and onwards. 
+
+**NOW INCLUDES DATA (except user count) from block 20600. Will add more data at a later point**
