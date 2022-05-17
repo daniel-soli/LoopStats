@@ -1,6 +1,8 @@
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using LoopStats.Models.Entities;
+using LoopStats.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -15,32 +17,51 @@ namespace LoopStats.Functions
     public class GetLatestStats
     {
         private readonly ILogger<GetLatestStats> _logger;
+        private readonly IStatsRepository<LoopringStatsEntity> _statsRepository;
 
-        public GetLatestStats(ILogger<GetLatestStats> log)
+        public GetLatestStats(ILogger<GetLatestStats> log, IStatsRepository<LoopringStatsEntity> statsRepository)
         {
             _logger = log;
+            _statsRepository = statsRepository;
         }
 
-        [FunctionName("GetLatestStats")]
-        [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
-        [OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Name** parameter")]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
-        public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req)
+        [FunctionName("GetLatest")]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "Get Latest" })]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
+        public async Task<IActionResult> GetLatest(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation("C# HTTP trigger GetLatest processed a request.");
 
-            string name = req.Query["name"];
+            var result = await _statsRepository.GetLatestStatAsync();
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            return new OkObjectResult(result);
+        }
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+        [FunctionName("GetLastDaysCount")]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "Get Latest" })]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
+        public async Task<IActionResult> GetLastDaysCount(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+        {
+            _logger.LogInformation("C# HTTP trigger GetLastDaysCount processed a request.");
 
-            return new OkObjectResult(responseMessage);
+            var result = await _statsRepository.GetLastDaysStatsAsync();
+
+            return new OkObjectResult(result);
+        }
+
+        [FunctionName("GetAllStats")]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "Get Latest" })]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
+        public async Task<IActionResult> GetAllStats(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+        {
+            _logger.LogInformation("C# HTTP trigger GetAllStats processed a request.");
+
+            var result = await _statsRepository.GetAllAsync();
+
+            return new OkObjectResult(result);
         }
     }
 }

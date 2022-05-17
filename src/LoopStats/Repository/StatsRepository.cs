@@ -1,4 +1,6 @@
-﻿using LoopStats.Models.Entities;
+﻿using AutoMapper;
+using LoopStats.Models.DTOs;
+using LoopStats.Models.Entities;
 using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,10 +15,12 @@ namespace LoopStats.Repository;
 public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEntity
 {
     private readonly CloudTable _table;
+    private readonly IMapper _mapper;
 
-    public StatsRepository(CloudTable table)
+    public StatsRepository(CloudTable table, IMapper mapper)
     {
         _table = table;
+        _mapper = mapper;
     }
 
     public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
@@ -38,11 +42,83 @@ public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEnt
     {
         try
         {
-            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>().Take(50);
+            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>();
             TableContinuationToken token = null;
             var response = await _table.ExecuteQuerySegmentedAsync(query, token);
 
             var result = response.FirstOrDefault();
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<LastDayStatsDto> GetLastDaysStatsAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>().Take(144);
+            TableContinuationToken token = null;
+            var response = await _table.ExecuteQuerySegmentedAsync(query, token);
+
+            var latest = response.FirstOrDefault();
+            var oldest = response.LastOrDefault();
+
+            LastDayStatsDto result = new LastDayStatsDto()
+            {
+                blockCount = latest.blockCount - oldest.blockCount,
+                nftCount = latest.nftCount - oldest.nftCount,
+                nftMintCount = latest.nftMintCount - oldest.nftMintCount,
+                tradeNFTCount = latest.tradeNFTCount - oldest.tradeNFTCount,
+                transactionCount = latest.transactionCount - oldest.transactionCount,
+                transferCount = latest.transferCount - oldest.transferCount,
+                transferNFTCount = latest.transferNFTCount - oldest.transferNFTCount,
+                userCount = latest.userCount - oldest.userCount
+            };
+
+            return result;
+
+        }
+        catch (Exception ex) 
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<AllStatsDto> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>();
+            TableContinuationToken token = null;
+            var response = await _table.ExecuteQuerySegmentedAsync(query, token);
+
+            if (response == null)
+                return null;
+
+            AllStatsDto result = new AllStatsDto();
+            foreach (var item in response)
+            {
+                StatsDto stat = new()
+                {
+                    blockCount = item.blockCount,
+                    nftCount = item.nftCount,
+                    tradeNFTCount = item.tradeNFTCount,
+                    transferCount = item.transferCount,
+                    userCount = item.userCount,
+                    nftMintCount = item.nftMintCount,
+                    Timestamp = item.Timestamp,
+                    transactionCount = item.transactionCount,
+                    transferNFTCount = item.transferNFTCount
+                };
+
+                result.Stats ??= new List<StatsDto>();
+
+                result.Stats.Add(stat);
+            }
 
             return result;
         }
