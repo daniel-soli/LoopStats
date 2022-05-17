@@ -29,7 +29,8 @@ public class OpenApiConfigurationOptions : IOpenApiConfigurationOptions
 
     public List<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>()
     {
-        new OpenApiServer() { Url = "https://loopystats.azurewebsites.net/api/swagger/ui"}
+        new OpenApiServer() { Url = "https://loopystats.azurewebsites.net/api/swagger/ui"},
+        new OpenApiServer() { Url = "https://loopy.sv2web.no/api/swagger/ui"}
     };
 
     public OpenApiVersionType OpenApiVersion { get; set; } = OpenApiVersionType.V2;
