@@ -42,7 +42,8 @@ public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEnt
     {
         try
         {
-            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>();
+            var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "LoopyStatsQuarterly");
+            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>().Where(filter);
             TableContinuationToken token = null;
             var response = await _table.ExecuteQuerySegmentedAsync(query, token);
 
@@ -60,7 +61,8 @@ public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEnt
     {
         try
         {
-            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>().Take(144);
+            var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "LoopyStatsQuarterly");
+            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>().Where(filter).Take(144);
             TableContinuationToken token = null;
             var response = await _table.ExecuteQuerySegmentedAsync(query, token);
 
@@ -92,7 +94,49 @@ public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEnt
     {
         try
         {
-            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>();
+            var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "LoopyStatsQuarterly");
+            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>().Where(filter);
+            TableContinuationToken token = null;
+            var response = await _table.ExecuteQuerySegmentedAsync(query, token);
+
+            if (response == null)
+                return null;
+
+            AllStatsDto result = new AllStatsDto();
+            foreach (var item in response)
+            {
+                StatsDto stat = new()
+                {
+                    blockCount = item.blockCount,
+                    nftCount = item.nftCount,
+                    tradeNFTCount = item.tradeNFTCount,
+                    transferCount = item.transferCount,
+                    userCount = item.userCount,
+                    nftMintCount = item.nftMintCount,
+                    Timestamp = item.Timestamp,
+                    transactionCount = item.transactionCount,
+                    transferNFTCount = item.transferNFTCount
+                };
+
+                result.Stats ??= new List<StatsDto>();
+
+                result.Stats.Add(stat);
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<AllStatsDto> GetAllDailyStatsAsync()
+    {
+        try
+        {
+            var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "LoopyStatsDaily");
+            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>().Where(filter);
             TableContinuationToken token = null;
             var response = await _table.ExecuteQuerySegmentedAsync(query, token);
 

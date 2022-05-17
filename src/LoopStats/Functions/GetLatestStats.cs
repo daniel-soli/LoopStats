@@ -63,6 +63,19 @@ namespace LoopStats.Functions
 
             return new OkObjectResult(result);
         }
+
+        [FunctionName("GetAllStats")]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "Get Daily" })]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
+        public async Task<IActionResult> GetAllDailyStats(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+        {
+            _logger.LogInformation("C# HTTP trigger GetAllStats processed a request.");
+
+            var result = await _statsRepository.GetAllAsync();
+
+            return new OkObjectResult(result);
+        }
     }
 }
 

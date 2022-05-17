@@ -9,6 +9,7 @@ namespace LoopStats.Repository
     {
         Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default);
         Task<AllStatsDto> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<AllStatsDto> GetAllDailyStatsAsync();
         Task<LastDayStatsDto> GetLastDaysStatsAsync(CancellationToken cancellationToken = default);
         Task<LoopringStatsEntity> GetLatestStatAsync(CancellationToken cancellationToken = default);
     }
