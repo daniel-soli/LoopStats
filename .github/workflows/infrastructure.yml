@@ -1,0 +1,44 @@
+name: LoopStats.LoopStatsFunction-Infrastructure
+
+on:
+  workflow_dispatch:
+
+env:
+  RESOURCEGROUPLOCATION: norwayeast
+
+jobs:
+  PublishPROD_Function:
+    name: Publish Infrastructure to Prod
+    runs-on: ubuntu-latest
+    environment: prod
+    env:
+      RESOURCEGROUPNAME: LoopyStatsRG
+      FUNCTIONAPPNAME: LoopyStats
+      APPSERVICEPLANNAME: ASP-LoopyStatsRG-9938
+      TABLENAME: loopringStats
+      GRAPHQL: https://api.thegraph.com/subgraphs/name/juanmardefago/loopring36
+    steps:
+      - uses: actions/checkout@v2
+        
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} 
+
+
+      - name: Create Function App
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTIONID }}
+          resourceGroupName: ${{ env.RESOURCEGROUPNAME }}
+          template: ./infrastructure/function/function-app.bicep
+          parameters: functionAppName=${{ env.FUNCTIONAPPNAME }} 
+                      appServicePlanName=${{ env.APPSERVICEPLANNAME }} 
+                      azureTenantId=${{ env.AZUREADTENANTID }} 
+                      tableName=${{ env.TABLENAME }}
+                      connectionString=${{ secrets.DBCONN}}
+                      graphQlUrl=${{ env.GRAPHQL}}
+          failOnStdErr: false
+      
