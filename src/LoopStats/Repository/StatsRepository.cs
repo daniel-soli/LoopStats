@@ -84,7 +84,10 @@ public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEnt
         try
         {
             var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "LoopyStatsQuarterly");
-            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>().Where(filter).Take(144);
+            DateTime lastDay = DateTime.UtcNow.AddDays(-1);
+            var filter2 = TableQuery.GenerateFilterConditionForDate("blockTimeStamp", QueryComparisons.GreaterThan, lastDay);
+            var combined = TableQuery.CombineFilters(filter, TableOperators.And, filter2);
+            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>().Where(combined);
             TableContinuationToken token = null;
             var response = await _table.ExecuteQuerySegmentedAsync(query, token);
 
