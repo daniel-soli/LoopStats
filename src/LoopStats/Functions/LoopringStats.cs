@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using AutoMapper;
+using LoopStats.Common.Exceptions;
 using LoopStats.Models.Entities;
 using LoopStats.Repository;
 using LoopStats.Services;
@@ -24,7 +25,7 @@ namespace LoopStats
         }
 
         [FunctionName("LoopringQuarterlyStats")]
-        public async Task Quarterly([TimerTrigger("0 */15 * * * *")]TimerInfo myTimer, ILogger log)
+        public async Task Quarterly([TimerTrigger("0 */1 * * * *")]TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 
@@ -33,10 +34,10 @@ namespace LoopStats
             var stats = _mapper.Map<LoopringStatsEntity>(result);
 
             // Check to see if the block data already exist
-            var existingBlock = _statsRepository.GetByBlockId(stats.blockCount);
+            var existingBlock = await _statsRepository.GetByBlockId(stats.blockCount);
 
             if (existingBlock != null)
-                await Task.CompletedTask;
+                throw new ConflictException(nameof(LoopringStatsEntity), stats.blockCount);
 
             stats.PartitionKey = "LoopyStatsQuarterly";
             stats.blockTimeStamp = DateTime.UtcNow;
