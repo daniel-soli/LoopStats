@@ -70,9 +70,22 @@ namespace LoopStats.Functions
         public async Task<IActionResult> GetAllDailyStats(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
-            _logger.LogInformation("C# HTTP trigger GetAllStats processed a request.");
+            _logger.LogInformation("C# HTTP trigger GetAllDailyStats processed a request.");
 
             var result = await _statsRepository.GetAllDailyStatsAsync();
+
+            return new OkObjectResult(result);
+        }
+
+        [FunctionName(nameof(GetDailyCountFromMidnightUTC))]
+        [OpenApiOperation(operationId: "DailyCount", tags: new[] { "Get daily count from 00:30" })]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
+        public async Task<IActionResult> GetDailyCountFromMidnightUTC(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+        {
+            _logger.LogInformation("C# HTTP trigger GetDailyCountFromMidnightUTC processed a request.");
+
+            var result = await _statsRepository.GetCountFromToday();
 
             return new OkObjectResult(result);
         }

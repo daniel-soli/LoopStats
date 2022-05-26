@@ -11,6 +11,7 @@ namespace LoopStats.Repository
         Task<AllStatsDto> GetAllAsync(CancellationToken cancellationToken = default);
         Task<AllStatsDto> GetAllDailyStatsAsync(CancellationToken cancellationToken = default);
         Task<LoopringStatsEntity> GetByBlockId(long blockId, CancellationToken cancellationToken = default);
+        Task<LastDayStatsDto> GetCountFromToday(CancellationToken cancellationToken = default);
         Task<LastDayStatsDto> GetLastDaysStatsAsync(CancellationToken cancellationToken = default);
         Task<LoopringStatsEntity> GetLatestStatAsync(CancellationToken cancellationToken = default);
     }
