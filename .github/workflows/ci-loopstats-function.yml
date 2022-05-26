@@ -19,7 +19,7 @@ env:
   CONFIGURATION: Release
   DOTNET_VERSION: 6.0.x
   PROJECT_DIRECTORY: ./src/LoopStats/
-  TEST_DIRECTORY: ./test/LoopStats.UnitTests/
+  TEST_DIRECTORY: ./test/LoopStats.UnitTest/
   PROJECT_NAME: LoopStats.csproj
 
 jobs:
