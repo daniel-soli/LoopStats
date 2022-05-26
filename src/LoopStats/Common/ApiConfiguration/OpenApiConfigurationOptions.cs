@@ -18,7 +18,7 @@ public class OpenApiConfigurationOptions : IOpenApiConfigurationOptions
         {
             Name = "Daniel Soli Stensvik",
             Email = "daniel.soli.stensvik@gmail.com",
-            Url = new Uri("https://github.com/danielsolistensvik/LoopStats/Issues"),
+            Url = new Uri("https://github.com/danielsolistensvik/LoopStats/issues"),
         },
         License = new OpenApiLicense()
         {
