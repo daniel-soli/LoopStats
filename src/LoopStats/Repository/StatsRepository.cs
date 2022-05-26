@@ -196,4 +196,54 @@ public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEnt
             throw new Exception(ex.Message, ex);
         }
     }
+
+
+    /// <summary>
+    /// Gets the latest block counts and the daily (at 00:30) and count the difference. 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>
+    /// Returns the count from difference between latest and latest daily.
+    /// </returns>
+    /// <exception cref="Exception"></exception>
+    public async Task<LastDayStatsDto> GetCountFromToday(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            // Get the latest block
+            var filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "LoopyStatsQuarterly");
+            TableQuery<LoopringStatsEntity> query = new TableQuery<LoopringStatsEntity>().Where(filter);
+            TableContinuationToken token = null;
+            var response = await _table.ExecuteQuerySegmentedAsync(query, token);
+
+            var latestBlock = response.FirstOrDefault();
+
+            // Get the latest daily
+            var filter2 = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "LoopyStatsDaily");
+            TableQuery<LoopringStatsEntity> query2 = new TableQuery<LoopringStatsEntity>().Where(filter2);
+            TableContinuationToken token2 = null;
+            var response2 = await _table.ExecuteQuerySegmentedAsync(query2, token2);
+
+            var latestDaily = response2.FirstOrDefault();
+
+            LastDayStatsDto result = new LastDayStatsDto()
+            {
+                blockCount = latestBlock.blockCount - latestDaily.blockCount,
+                nftCount = latestBlock.nftCount - latestDaily.nftCount,
+                nftMintCount = latestBlock.nftMintCount - latestDaily.nftMintCount,
+                tradeNFTCount = latestBlock.tradeNFTCount - latestDaily.tradeNFTCount,
+                transactionCount = latestBlock.transactionCount - latestDaily.transactionCount,
+                transferCount = latestBlock.transferCount - latestDaily.transferCount,
+                transferNFTCount = latestBlock.transferNFTCount - latestDaily.transferNFTCount,
+                userCount = latestBlock.userCount - latestDaily.userCount
+            };
+
+            return result;
+
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
 }
