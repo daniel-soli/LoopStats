@@ -23,6 +23,8 @@ Gets you all rows of stats (up until 1000 rows). This is from the partition ever
 ### All daily
 Gets you all the rows of stats (up until 1000). This is from the partition every day. 
 
+### Count daily
+This gets you the count from the latest daily (collected at 00:30) to the latest block collected. 
 
 ## Data
 Since this is a new repository the data is not that big yet. I will try to add historic data later, but as for now it is only from 16th May and onwards. 
