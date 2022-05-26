@@ -15,12 +15,10 @@ namespace LoopStats.Repository;
 public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEntity
 {
     private readonly CloudTable _table;
-    private readonly IMapper _mapper;
 
-    public StatsRepository(CloudTable table, IMapper mapper)
+    public StatsRepository(CloudTable table)
     {
         _table = table;
-        _mapper = mapper;
     }
 
     public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
