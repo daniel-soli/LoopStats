@@ -5,6 +5,8 @@ VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoopStats", "src\LoopStats\LoopStats.csproj", "{E23B2236-DB9D-4B0F-84FA-D36CB0F88D67}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoopStats.UnitTest", "test\LoopStats.UnitTest\LoopStats.UnitTest.csproj", "{434D2378-ECD9-4EFF-BADF-CE05E2BCAC24}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{E23B2236-DB9D-4B0F-84FA-D36CB0F88D67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E23B2236-DB9D-4B0F-84FA-D36CB0F88D67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E23B2236-DB9D-4B0F-84FA-D36CB0F88D67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{434D2378-ECD9-4EFF-BADF-CE05E2BCAC24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{434D2378-ECD9-4EFF-BADF-CE05E2BCAC24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{434D2378-ECD9-4EFF-BADF-CE05E2BCAC24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{434D2378-ECD9-4EFF-BADF-CE05E2BCAC24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
