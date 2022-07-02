@@ -18,7 +18,17 @@ GetLatest will as the name states, get you the latest data.
 The last day count gets you how many blocks, transactions, transfers, transfer NFT, trades, mints, users and NFTs there have been the last 24 hours (from when you queried)
 
 ### All stats
-Gets you all rows of stats (up until 1000 rows). This is from the partition every 15 minutes
+This has now been modified to query all blocks.  
+Query can be sent like this: 
+```json
+{
+	"BlockId": "20123",
+	"Index": 1,
+	"PageSize": "25"
+}
+```
+
+Default is Index - 1 and PageSize - 25. 
 
 ### All daily
 Gets you all the rows of stats (up until 1000). This is from the partition every day. 
@@ -29,4 +39,4 @@ This gets you the count from the latest daily (collected at 00:30) to the latest
 ## Data
 Since this is a new repository the data is not that big yet. I will try to add historic data later, but as for now it is only from 16th May and onwards. 
 
-**NOW INCLUDES DATA (except user count) from block 20000. Will add more data at a later point**
+**NOW INCLUDES DATA (except user count) from block 18000. Will add more data at a later point**
