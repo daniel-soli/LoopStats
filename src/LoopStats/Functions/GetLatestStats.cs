@@ -78,6 +78,9 @@ namespace LoopStats.Functions
 
             GetBlockStatsQuery query = JsonConvert.DeserializeObject<GetBlockStatsQuery>(content);
 
+            if (query == null)
+                query = new();
+
             var result = await _statsRepository.GetBlocksQuery(query);
 
             return new OkObjectResult(result);
