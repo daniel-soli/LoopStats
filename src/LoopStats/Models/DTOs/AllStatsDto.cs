@@ -11,7 +11,7 @@ public class AllStatsDto
     public List<StatsDto> Stats { get; set; }
 }
 
-public class StatsDto
+public class StatsDto : IMapFrom<LoopringStatsEntity>
 {
     public long blockCount { get; set; }
     public long transactionCount { get; set; }
@@ -22,4 +22,9 @@ public class StatsDto
     public long userCount { get; set; }
     public long nftCount { get; set; }
     public DateTimeOffset Timestamp { get; set; }
+
+    public void Mapping(Profile profile)
+    {
+        profile.CreateMap<LoopringStatsEntity, StatsDto>();
+    }
 }
