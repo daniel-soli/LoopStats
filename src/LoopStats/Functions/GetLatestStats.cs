@@ -1,7 +1,9 @@
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using LoopStats.Models.DTOs;
 using LoopStats.Models.Entities;
+using LoopStats.Models.Queries;
 using LoopStats.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -51,15 +53,32 @@ namespace LoopStats.Functions
             return new OkObjectResult(result);
         }
 
-        [FunctionName(nameof(GetAllStats))]
+        //[FunctionName(nameof(GetAllStats))]
+        //[OpenApiOperation(operationId: "All", tags: new[] { "Get All Stats" })]
+        //[OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
+        //public async Task<IActionResult> GetAllStats(
+        //    [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+        //{
+        //    _logger.LogInformation("C# HTTP trigger GetAllStats processed a request.");
+
+        //    var result = await _statsRepository.GetAllAsync();
+
+        //    return new OkObjectResult(result);
+        //}
+
+        [FunctionName(nameof(GetBlocksQuery))]
         [OpenApiOperation(operationId: "All", tags: new[] { "Get All Stats" })]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
-        public async Task<IActionResult> GetAllStats(
+        public async Task<ActionResult<PaginatedList<StatsDto>>> GetBlocksQuery(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger GetAllStats processed a request.");
 
-            var result = await _statsRepository.GetAllAsync();
+            var content = await new StreamReader(req.Body).ReadToEndAsync();
+
+            GetBlockStatsQuery query = JsonConvert.DeserializeObject<GetBlockStatsQuery>(content);
+
+            var result = await _statsRepository.GetBlocksQuery(query);
 
             return new OkObjectResult(result);
         }

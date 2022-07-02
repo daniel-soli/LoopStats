@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using LoopStats.Common.Mappings;
 using LoopStats.Models.DTOs;
 using LoopStats.Models.Entities;
+using LoopStats.Models.Queries;
 using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,10 +17,12 @@ namespace LoopStats.Repository;
 public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEntity
 {
     private readonly CloudTable _table;
+    private readonly IMapper _mapper;
 
-    public StatsRepository(CloudTable table)
+    public StatsRepository(CloudTable table, IMapper mapper)
     {
         _table = table;
+        _mapper = mapper;
     }
 
     public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
@@ -235,6 +239,57 @@ public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEnt
                 transferNFTCount = latestBlock.transferNFTCount - latestDaily.transferNFTCount,
                 userCount = latestBlock.userCount - latestDaily.userCount
             };
+
+            return result;
+
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
+    }
+
+    public async Task<PaginatedList<StatsDto>> GetBlocksQuery(GetBlockStatsQuery query, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            string filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "LoopyStatsQuarterly");
+            string blockIdFilter = "";
+            if (query.BlockId != null)
+            {
+                blockIdFilter = TableQuery.GenerateFilterConditionForInt("blockCount", QueryComparisons.Equal, int.Parse(query.BlockId));
+            }
+            else
+            {
+                blockIdFilter = TableQuery.GenerateFilterConditionForInt("blockCount", QueryComparisons.GreaterThan, 0);
+            }
+
+            var combined = TableQuery.CombineFilters(filter, TableOperators.And, blockIdFilter);
+            TableQuery<LoopringStatsEntity> tableQuery = new TableQuery<LoopringStatsEntity>().Where(combined);
+            TableContinuationToken token = null;
+            List<LoopringStatsEntity> response = new();
+            do
+            {
+                var tempResponse = await _table.ExecuteQuerySegmentedAsync(tableQuery, token, null, null);
+                response.AddRange(tempResponse.Results);
+                token = tempResponse.ContinuationToken;
+            }
+            while (token != null);
+            
+
+            if (response.Count == 0)
+                return null;
+
+            List<StatsDto> statsList = new();
+            foreach (var item in response)
+            {
+                var temp = _mapper.Map<StatsDto>(item);
+                statsList.Add(temp);
+            }
+
+            PaginatedList<StatsDto> result = _mapper.Map<IEnumerable<StatsDto>>(statsList)
+                    .OrderByDescending(x => x.blockCount)
+                    .PaginatedList(query.Index, query.PageSize);
 
             return result;
 
