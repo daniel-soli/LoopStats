@@ -1,4 +1,6 @@
-﻿namespace LoopStats.Models.Queries;
+﻿using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
+
+namespace LoopStats.Models.Queries;
 
 public class GetBlockStatsQuery
 {

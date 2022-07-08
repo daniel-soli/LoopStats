@@ -255,7 +255,7 @@ public class StatsRepository<T> : IStatsRepository<T> where T : class, ITableEnt
         {
             string filter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "LoopyStatsQuarterly");
             string blockIdFilter = "";
-            if (query?.BlockId != null)
+            if (query?.BlockId != null && !string.IsNullOrWhiteSpace(query?.BlockId))
             {
                 blockIdFilter = TableQuery.GenerateFilterConditionForInt("blockCount", QueryComparisons.Equal, int.Parse(query.BlockId));
             }
