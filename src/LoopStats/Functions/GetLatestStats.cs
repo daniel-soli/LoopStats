@@ -56,16 +56,21 @@ namespace LoopStats.Functions
 
         [FunctionName(nameof(GetBlocksQuery))]
         [OpenApiOperation(operationId: "All", tags: new[] { "Get All Stats" })]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Example = typeof(GetBlockStatsQueryExample), Description = "response")]
-        [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(GetBlockStatsQuery), Description = "Parameters")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
+        [OpenApiParameter(name: "BlockId", In = ParameterLocation.Query, Type = typeof(string), Description = "Block Id")]
+        [OpenApiParameter(name: "PageIndex", In = ParameterLocation.Query, Type = typeof(int), Description = "Page Index")]
+        [OpenApiParameter(name: "PageSize", In = ParameterLocation.Query, Type = typeof(int), Description = "Page Size")]
         public async Task<ActionResult<PaginatedList<StatsDto>>> GetBlocksQuery(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger GetAllStats processed a request.");
 
-            var content = await new StreamReader(req.Body).ReadToEndAsync();
-
-            GetBlockStatsQuery query = JsonConvert.DeserializeObject<GetBlockStatsQuery>(content);
+            GetBlockStatsQuery query = new()
+            {
+                BlockId = string.IsNullOrWhiteSpace(req.Query["BlockId"]) ? "" : req.Query["BlockId"],
+                Index = int.TryParse(req.Query["PageIndex"], out int index) ? index : 1,
+                PageSize = int.TryParse(req.Query["PageSize"], out int size) ? size : 25
+            };
 
             var result = await _statsRepository.GetBlocksQuery(query);
 
