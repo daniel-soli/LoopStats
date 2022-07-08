@@ -19,14 +19,6 @@ The last day count gets you how many blocks, transactions, transfers, transfer N
 
 ### All stats
 This has now been modified to query all blocks.  
-Query can be sent like this: 
-```json
-{
-	"BlockId": "20123",
-	"Index": 1,
-	"PageSize": "25"
-}
-```
 
 Default is Index - 1 and PageSize - 25. 
 
