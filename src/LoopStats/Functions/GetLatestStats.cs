@@ -7,6 +7,7 @@ using LoopStats.Models.Queries;
 using LoopStats.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
@@ -53,22 +54,10 @@ namespace LoopStats.Functions
             return new OkObjectResult(result);
         }
 
-        //[FunctionName(nameof(GetAllStats))]
-        //[OpenApiOperation(operationId: "All", tags: new[] { "Get All Stats" })]
-        //[OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
-        //public async Task<IActionResult> GetAllStats(
-        //    [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
-        //{
-        //    _logger.LogInformation("C# HTTP trigger GetAllStats processed a request.");
-
-        //    var result = await _statsRepository.GetAllAsync();
-
-        //    return new OkObjectResult(result);
-        //}
-
         [FunctionName(nameof(GetBlocksQuery))]
         [OpenApiOperation(operationId: "All", tags: new[] { "Get All Stats" })]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "response")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Example = typeof(GetBlockStatsQueryExample), Description = "response")]
+        [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(GetBlockStatsQuery), Description = "Parameters")]
         public async Task<ActionResult<PaginatedList<StatsDto>>> GetBlocksQuery(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
@@ -77,9 +66,6 @@ namespace LoopStats.Functions
             var content = await new StreamReader(req.Body).ReadToEndAsync();
 
             GetBlockStatsQuery query = JsonConvert.DeserializeObject<GetBlockStatsQuery>(content);
-
-            if (query == null)
-                query = new();
 
             var result = await _statsRepository.GetBlocksQuery(query);
 
